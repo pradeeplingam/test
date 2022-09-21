@@ -1,0 +1,6 @@
+server:
+  port: 8080
+aws:
+  secretsmanager:
+    db:
+      secret: dev/rds/dudeapp_dev

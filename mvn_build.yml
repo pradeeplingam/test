@@ -1,0 +1,12 @@
+build:
+  image: maven:3.8.3-openjdk-17
+  stage: build
+  script:
+    - echo "Compiling dude app..."
+    - mvn clean install -DskipTests -T 10
+    - ls -ltrh
+  artifacts:
+   name: "app-snapshot"
+   expire_in: 15 min
+   paths:
+     - ./**/target/*.jar

@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/dudeappdev?createDatabaseIfNotExist=true
+    username: root
+    password: P@ssword1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  application:
+    name: user-service
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+server:
+  servlet:
+    context-path: /user
+  port: 8081
+
+aws:
+  key: AKIATZT2RIK3ALQQLLKF
+  secret: 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
+  region: ap-south-1
+  kycDocumentBucket: dudeapp-kyc
+  lambda:
+    panCardFunctionName: kycDocExtract
+  kms:
+    arn: arn:aws:kms:ap-south-1:261176246966:key/21a90fee-c5d7-4ae1-b5c0-bfec18f95f77
+otp:
+  expirationMinutes : 2

@@ -1,0 +1,29 @@
+build image:
+  stage: package
+  image: 
+    name: docker:latest
+  services:
+   - name: docker:dind
+  before_script:
+    - apk update && apk upgrade && apk add --no-cache curl jq python3 py-pip
+    - pip install awscli
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set region $AWS_DEFAULT_REGION
+    # - $(aws ecr get-login --no-include-email --region "${AWS_DEFAULT_REGION}")
+    # - IMAGE_TAG="$(echo $CI_COMMIT_SHA | head -c 8)"
+    - export OPS_BUCKET=$S3_BUCKET
+  script:
+    - echo $OPS_BUCKET
+    - |+
+      for i in 'user-service' ; do
+        cd $i
+        aws s3 cp s3://$OPS_BUCKET/cicd/Dockerfile .
+        ls -ltrh 
+        docker build -t registry.gitlab.com/dude_app/dudeapp-server:$i --build-arg SERVICE_NAME=$i --build-arg PROFILE=dev .
+        docker image ls
+        cd ..
+        docker login registry.gitlab.com -u @pradeeplingam-dudeapp -p glpat-5YQRzys2NJzXs7KYYyRy
+        docker push registry.gitlab.com/dude_app/dudeapp-server:$i
+      done
+ 
